@@ -1,8 +1,8 @@
 FROM ubuntu:16.04
-RUN apt-get update && apt-get install -y --force-yes golang
-COPY src /src
-ENV GOPATH /
+RUN apt-get update && apt-get install -y golang
+COPY backend go/src/github.com/IAmRDhar/scaling-web-app/backend
+ENV GOPATH /go
 EXPOSE 4000
-RUN go install github.com/ps/dataservice
-WORKDIR /
+RUN go install github.com/IAmRDhar/scaling-web-app/backend/dataservice
+WORKDIR /go
 ENTRYPOINT ["./bin/dataservice"]

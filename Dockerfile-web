@@ -1,9 +1,11 @@
 FROM ubuntu:16.04
-RUN apt-get update && apt-get install -y --force-yes golang
-COPY src /src
+RUN apt-get update && apt-get install -y golang
+COPY backend /go/src/github.com/IAmRDhar/scaling-web-app/backend
 COPY web /web
-ENV GOPATH /
+ENV GOPATH /go
 ENV DATA_SERVICE_URL http://172.18.0:4000
 EXPOSE 3000
-RUN go install github.com/ps/web
+RUN go install github.com/IAmRDhar/scaling-web-app/backend/web
+RUN ls /go/bin
+WORKDIR /go
 ENTRYPOINT ["./bin/web"]
