@@ -38,8 +38,10 @@ var lastModTime time.Time = time.Unix(0, 0)
 func buildTemplateCache() (*template.Template, bool) {
 	needUpdate := false
 
-	f, _ := os.Open("web/templates")
-
+	f, err := os.Open("/web/templates")
+	if err != nil {
+		//	panic(err)
+	}
 	fileInfos, _ := f.Readdir(-1)
 	fileNames := make([]string, len(fileInfos))
 	for idx, fi := range fileInfos {
@@ -47,7 +49,7 @@ func buildTemplateCache() (*template.Template, bool) {
 			lastModTime = fi.ModTime()
 			needUpdate = true
 		}
-		fileNames[idx] = "web/templates/" + fi.Name()
+		fileNames[idx] = "/web/templates/" + fi.Name()
 	}
 
 	var tc *template.Template
