@@ -14,7 +14,7 @@ func main() {
 	http.HandleFunc("/posts/", HandleRequest)
 	http.HandleFunc("/posts", HandleRequest)
 
-	http.ListenAndServe(":4000", new(util.GzipHandler))
+	http.ListenAndServeTLS(":4000", "/cert.pem", "/key.pem", new(util.GzipHandler))
 }
 
 var (
