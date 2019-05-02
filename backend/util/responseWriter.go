@@ -49,7 +49,7 @@ func (w closeableResponseWriter) Close() {
 
 func GetResponseWriter(w http.ResponseWriter, req *http.Request) CloseableResponseWriter {
 	// Check if browser can use the gzip encryption
-	if strings.Contains(req.Header.Get("Account-Encoding"), "gzip") {
+	if strings.Contains(req.Header.Get("Accept-Encoding"), "gzip") {
 		w.Header().Set("Content-Encoding", "gzip")
 		gRn := gzipResponseWriter{
 			ResponseWriter: w,
