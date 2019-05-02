@@ -7,13 +7,14 @@ import (
 	"strconv"
 
 	"github.com/IAmRDhar/scaling-web-app/backend/entity"
+	"github.com/IAmRDhar/scaling-web-app/backend/util"
 )
 
 func main() {
 	http.HandleFunc("/posts/", HandleRequest)
 	http.HandleFunc("/posts", HandleRequest)
 
-	http.ListenAndServe(":4000", nil)
+	http.ListenAndServe(":4000", new(util.GzipHandler))
 }
 
 var (

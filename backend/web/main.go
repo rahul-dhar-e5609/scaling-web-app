@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/IAmRDhar/scaling-web-app/backend/util"
 	"github.com/IAmRDhar/scaling-web-app/backend/web/controller"
 )
 
@@ -18,7 +19,7 @@ func main() {
 	templateCache, _ := buildTemplateCache()
 	controller.Setup(templateCache)
 
-	go http.ListenAndServe(":3000", nil)
+	go http.ListenAndServe(":3000", new(util.GzipHandler))
 
 	go func() {
 		for range time.Tick(300 * time.Millisecond) {
