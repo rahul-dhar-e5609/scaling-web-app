@@ -24,4 +24,45 @@ This repository is for learning how a web app can be scaled.
     docker ps
     docker network inspect scalenet
     ```
->   The network inspect should show both the containers in the Containers object of the configuration
+>   The docker network inspect command should show both the containers in the Containers object of the configuration, see the eg below
+- An output for docker network inspect scalenet
+    ```
+    [
+        {
+            "Name": "scalenet",
+            "Id": "01f8a6ee533b66b0775b4ad6fb99c825dbafd8aba963459d00fb835940ae9eab",
+            "Created": "2019-04-30T19:45:53.380381186Z",
+            "Scope": "local",
+            "Driver": "bridge",
+            "EnableIPv6": false,
+            "IPAM": {
+                "Driver": "default",
+                "Options": {},
+                "Config": [
+                    {
+                        "Subnet": "172.18.0.0/16",
+                        "Gateway": "172.18.0.1"
+                    }
+                ]
+            },
+            "Internal": false,
+            "Attachable": false,
+            "Ingress": false,
+            "ConfigFrom": {
+                "Network": ""
+            },
+            "ConfigOnly": false,
+            "Containers": {
+                "2003ea2193d36f79916e6b4af1eaec0ee6cce219aef3982cf09ec0a3dbf52cd3": {
+                    "Name": "dataservice",
+                    "EndpointID": "89c3ed067d996464141dd4923b4389d9af03caf2fa944caf2c99c6e6d0dcceb6",
+                    "MacAddress": "02:42:ac:12:00:0a",
+                    "IPv4Address": "172.18.0.10/16",
+                    "IPv6Address": ""
+                }
+            },
+            "Options": {},
+            "Labels": {}
+        }
+    ]
+    ```
