@@ -16,6 +16,12 @@ This repository is for learning how a web app can be scaled.
 ### Create containers
 - Containers:
     ```
-    docker run --name dataservice --ip=172.18.0.10 --net=scalenet -P --rm -it scale/dataservice
-    docker run --name web --ip=172.18.0.11 --net=scalenet -P --rm -it -- scale/web --dataservice=http://172.18.0.10:4000
+    docker run --name dataservice --ip=172.18.0.10 --net=scalenet -p 4000:4000 --rm -it -d scale/dataservice
+    docker run --net=scalenet --ip=172.18.0.2 -p3000:3000 --name webtest --rm -it scale/web --dataservice=https://172.18.0.10:4000
     ```
+- Check that both the containers are up and running using the below-mentioned commands:
+    ```
+    docker ps
+    docker network inspect scalenet
+    ```
+>   The network inspect should show both the containers in the Containers object of the configuration
