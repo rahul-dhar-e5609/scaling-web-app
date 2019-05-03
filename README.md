@@ -1,6 +1,6 @@
 # Scaling a web app
 
-This repository is for learning how a web app can be scaled.
+A repository for learning how to scale a web application, concentrates over using docker containers over a bridge network for application instances that are being load balanced using the Round Robin algorithm. The application instances interact with a data service and a logging service that run in their separate containers. 
 
 ## Installation
 ### Create subnet
