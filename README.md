@@ -10,6 +10,9 @@ A repository for learning how to scale a web application, concentrates over usin
 ### Building image for the dataservice
 - `docker build -f Dockerfile-dataservice -t scale/dataservice .`
 
+### Building image for the loadbalancer
+- `docker build -f Dockerfile-loadbalancer -t scale/loadbalancer .`
+
 ### Building image for web backend
 - `docker build -f Dockerfile-web -t scale/web .`
 
@@ -17,7 +20,8 @@ A repository for learning how to scale a web application, concentrates over usin
 - Containers:
     ```
     docker run --name dataservice --ip=172.18.0.10 --net=scalenet -p 4000:4000 --rm -it -d scale/dataservice
-    docker run --net=scalenet --ip=172.18.0.2 -p3000:3000 --name webtest --rm -it scale/web --dataservice=https://172.18.0.10:4000
+    docker run --name loadbalancer --ip=172.18.0.12 --net=scalenet -p 2000:2000 --rm -it -d scale/loadbalancer
+    docker run --net=scalenet --ip=172.18.0.2 -p3000:3000 --name webtest --rm -it scale/web --dataservice=https://172.18.0.10:4000 --loadbalancer=https://172.18.0.12:2001
     ```
 - Check that both the containers are up and running using the below-mentioned commands:
     ```
