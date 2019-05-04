@@ -13,11 +13,17 @@ import (
 	"github.com/IAmRDhar/scaling-web-app/backend/web/controller"
 )
 
+var loadbalancerURL = flag.String("loadbalancer", "https://172.18.0.12:2001", "Address of the load balancer")
+
 func main() {
 	flag.Parse()
 
 	templateCache, _ := buildTemplateCache()
 	controller.Setup(templateCache)
+
+	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
 
 	go http.ListenAndServeTLS(":3000", "/cert.pem", "/key.pem", new(util.GzipHandler))
 
@@ -30,8 +36,20 @@ func main() {
 		}
 	}()
 
+	// Could have done using channels
+	// @todo TODO see waitgroups
+	time.Sleep(2 * time.Second)
+
+	// Making a service discovery request
+	// as soon as the app is up
+	http.Get(*loadbalancerURL + "/register?port=3000")
+
 	log.Println("Server started, press <ENTER> to exit")
 	fmt.Scanln()
+
+	// Inform Load balancer that app is down
+	http.Get(*loadbalancerURL + "/unregister?port=3000")
+
 }
 
 var lastModTime time.Time = time.Unix(0, 0)
