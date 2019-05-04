@@ -8,13 +8,13 @@ A repository for learning how to scale a web application, concentrates over usin
 - `docker network create --subnet=172.18.0.0/16 scalenet`
 
 ### Building image for the dataservice
-- `docker build -f Dockerfile-dataservice -t scale/dataservice .`
+- `docker build -f dataservice.dockerfile -t scale/dataservice .`
 
 ### Building image for the loadbalancer
-- `docker build -f Dockerfile-loadbalancer -t scale/loadbalancer .`
+- `docker build -f loadbalancer.dockerfile -t scale/loadbalancer .`
 
 ### Building image for web backend
-- `docker build -f Dockerfile-web -t scale/web .`
+- `docker build -f web.dockerfile -t scale/web .`
 
 ### Create containers
 - Containers:
@@ -31,6 +31,7 @@ A repository for learning how to scale a web application, concentrates over usin
 >   The docker network inspect command should show both the containers in the Containers object of the configuration, see the eg below
 - An output for docker network inspect scalenet
     ```
+    Rahuls-MacBook-Pro:scaling-web-app rahuldhar$ docker network inspect scalenet
     [
         {
             "Name": "scalenet",
@@ -57,11 +58,25 @@ A repository for learning how to scale a web application, concentrates over usin
             },
             "ConfigOnly": false,
             "Containers": {
-                "2003ea2193d36f79916e6b4af1eaec0ee6cce219aef3982cf09ec0a3dbf52cd3": {
+                "a7c1fe39219c3eb41f69ef6965dd8b0911eb69067cc22e8171e30958f47d1cf5": {
                     "Name": "dataservice",
-                    "EndpointID": "89c3ed067d996464141dd4923b4389d9af03caf2fa944caf2c99c6e6d0dcceb6",
+                    "EndpointID": "e3696f2c570ac122526c94e82fe258faa58d58a2f669e513b3c433c8f2b81df2",
                     "MacAddress": "02:42:ac:12:00:0a",
                     "IPv4Address": "172.18.0.10/16",
+                    "IPv6Address": ""
+                },
+                "c7bffd2989d8534671005e43f23b9ad45fc2d67d351a6828c12a049bfceacc6d": {
+                    "Name": "webtest",
+                    "EndpointID": "000995e02495a6ea1455588af0747a9423bafba6761dddffd7f31513eab1c571",
+                    "MacAddress": "02:42:ac:12:00:02",
+                    "IPv4Address": "172.18.0.2/16",
+                    "IPv6Address": ""
+                },
+                "f402bfa13e2491a5de1e08af880c80a59ffd2c4919400cf9c9a841f17202925c": {
+                    "Name": "loadbalancer",
+                    "EndpointID": "b8d56b9813d55ddcac5a12853ccd14ba2b911b4c8609537519b1c56d85904f9e",
+                    "MacAddress": "02:42:ac:12:00:0c",
+                    "IPv4Address": "172.18.0.12/16",
                     "IPv6Address": ""
                 }
             },
