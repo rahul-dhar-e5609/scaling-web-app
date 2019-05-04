@@ -8,13 +8,13 @@ A repository for learning how to scale a web application, concentrates over usin
 - `docker network create --subnet=172.18.0.0/16 scalenet`
 
 ### Building image for the dataservice
-- `docker build -f dataservice.dockerfile -t scale/dataservice .`
+- `docker build -f .docker/dataservice.dockerfile -t scale/dataservice .`
 
 ### Building image for the loadbalancer
-- `docker build -f loadbalancer.dockerfile -t scale/loadbalancer .`
+- `docker build -f .docker/loadbalancer.dockerfile -t scale/loadbalancer .`
 
 ### Building image for web backend
-- `docker build -f web.dockerfile -t scale/web .`
+- `docker build -f .docker/web.dockerfile -t scale/web .`
 
 ### Create containers
 - Containers:
