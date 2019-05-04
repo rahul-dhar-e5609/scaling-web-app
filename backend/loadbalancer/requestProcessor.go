@@ -32,6 +32,44 @@ func processRequests() {
 			}
 			host := appservers[currentIndex]
 			go processRequest(host, request)
+		case host := <-registerCh:
+			println("register: " + host)
+			isFound := false
+			for _, h := range appservers {
+				if host == h {
+					isFound = true
+					break
+				}
+			}
+			if !isFound {
+				appservers = append(appservers, host)
+			}
+		case host := <-unregisterCh:
+			println("unregister: " + host)
+			for i := len(appservers) - 1; i >= 0; i-- {
+				if appservers[i] == host {
+					appservers = append(appservers[:i], appservers[i+1:]...)
+				}
+			}
+		case <-heartbeatCh:
+			println("heartbeat")
+			// Copy the appservers slice so that it isnt
+			// affected while the appserver thinning is done
+			server := appservers[:]
+
+			// Every request to check if the appservers
+			// are up or not is done in this go routine,
+			// mutually exclusive to other channels, no
+			// memory / appservers slice is being shared
+			go func(servers []string) {
+				for _, h := range servers {
+					resp, err := http.Get("https://" + h + "/ping")
+					if err != nil || resp.StatusCode != 200 {
+						// unregistering
+						unregisterCh <- h
+					}
+				}
+			}(server)
 		}
 	}
 }
