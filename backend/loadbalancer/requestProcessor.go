@@ -82,11 +82,13 @@ func processRequest(host string, request *webRequest) {
 	println(hostURL.String())
 	req, _ := http.NewRequest(request.r.Method, hostURL.String(), request.r.Body)
 	for k, v := range request.r.Header {
-		values := ""
+		//	values := ""
 		for _, headerValue := range v {
-			values += headerValue + " "
+			// println("[Request to ", host, "] Header: ", k, " Value: ", headerValue)
+			//		values += headerValue + " "
+			req.Header.Add(k, headerValue)
 		}
-		req.Header.Add(k, values)
+		// req.Header.Add(k, values)
 	}
 
 	resp, err := client.Do(req)
@@ -98,12 +100,15 @@ func processRequest(host string, request *webRequest) {
 	}
 
 	for k, v := range resp.Header {
-		values := ""
+		//values := ""
 		for _, headerValue := range v {
-			values += headerValue + " "
+			// println("[Response from ", host, "] Header: ", k, " Value: ", headerValue)
+			//	values += headerValue + " "
+			request.w.Header().Add(k, headerValue)
 		}
-		request.w.Header().Add(k, values)
+		// request.w.Header().Add(k, values)
 	}
+	request.w.Header().Add("Content-Type", "text/html")
 	io.Copy(request.w, resp.Body)
 
 	request.doneCh <- struct{}{}
