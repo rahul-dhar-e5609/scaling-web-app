@@ -32,11 +32,21 @@ func main() {
 		}
 	})
 
+	http.HandleFunc("/invalidate", invalidateEntry)
+
 	go http.ListenAndServeTLS(":5000", "/cert.pem", "/key.pem", nil)
 
 	log.Println("Caching service started, press <ENTER> to exit")
 
 	fmt.Scanln()
+}
+
+func invalidateEntry(w http.ResponseWriter, r *http.Request) {
+	mutex.Lock()
+	defer mutex.Unlock()
+	key := r.URL.Query().Get("key")
+	fmt.Printf("Purging entry with key %s\n", key)
+	delete(cache, key)
 }
 
 func getFromCache(w http.ResponseWriter, r *http.Request) {
