@@ -40,4 +40,5 @@ func (c *CommentController) createComment(w http.ResponseWriter, r *http.Request
 
 	w.Header().Add("Location", "/posts/"+strconv.Itoa(postID))
 	w.WriteHeader(http.StatusSeeOther)
+	go invalideCacheEntry(w.Header().Get("Location"))
 }
