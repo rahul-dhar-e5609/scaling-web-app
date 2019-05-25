@@ -17,8 +17,9 @@ type cacheEntry struct {
 }
 
 var (
-	cache = make(map[string]*cacheEntry)
-	mutex = sync.RWMutex{}
+	cache  = make(map[string]*cacheEntry)
+	mutex  = sync.RWMutex{}
+	timeCh = time.Tick(60 * time.Second)
 )
 
 var maxAgeRegexp = regexp.MustCompile(`maxage=(\d+)`)
@@ -34,11 +35,35 @@ func main() {
 
 	http.HandleFunc("/invalidate", invalidateEntry)
 
+	go purgeCache()
+
 	go http.ListenAndServeTLS(":5000", "/cert.pem", "/key.pem", nil)
 
 	log.Println("Caching service started, press <ENTER> to exit")
 
 	fmt.Scanln()
+}
+
+func purgeCache() {
+	for range timeCh {
+		mutex.Lock()
+		now := time.Now()
+
+		fmt.Println("Checking cache expiration")
+
+		for k, v := range cache {
+			if now.Before(v.expiration) {
+				fmt.Printf("Purging entry with key %s...\n", k)
+				delete(cache, k)
+			}
+		}
+		// Not making a defer call here
+		// because that would run when the
+		// funciton returns, in which case,
+		// all our resources would be locked
+		// for read or write operations.
+		mutex.Unlock()
+	}
 }
 
 func invalidateEntry(w http.ResponseWriter, r *http.Request) {
