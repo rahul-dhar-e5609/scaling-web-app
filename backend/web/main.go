@@ -9,6 +9,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/IAmRDhar/scaling-web-app/backend/entity"
+	"github.com/IAmRDhar/scaling-web-app/backend/logservice/loghelper"
+
 	"github.com/IAmRDhar/scaling-web-app/backend/util"
 	"github.com/IAmRDhar/scaling-web-app/backend/web/controller"
 )
@@ -40,6 +43,12 @@ func main() {
 	// @todo TODO see waitgroups
 	time.Sleep(2 * time.Second)
 
+	go loghelper.WriteEntry(&entity.LogEntry{
+		Level:     entity.LogLevelInfo,
+		Timestamp: time.Now(),
+		Source:    "app server",
+		Message:   "Registering with the load balancer",
+	})
 	// Making a service discovery request
 	// as soon as the app is up
 	http.Get(*loadbalancerURL + "/register?port=3000")
@@ -47,6 +56,12 @@ func main() {
 	log.Println("Server started, press <ENTER> to exit")
 	fmt.Scanln()
 
+	go loghelper.WriteEntry(&entity.LogEntry{
+		Level:     entity.LogLevelInfo,
+		Timestamp: time.Now(),
+		Source:    "app server",
+		Message:   "Unregistering with the load balancer",
+	})
 	// Inform Load balancer that app is down
 	http.Get(*loadbalancerURL + "/unregister?port=3000")
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -38,6 +39,7 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// handling requests off to a
 		// request processor asynchronously

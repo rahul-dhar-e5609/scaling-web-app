@@ -4,6 +4,10 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
+
+	"github.com/IAmRDhar/scaling-web-app/backend/entity"
+	"github.com/IAmRDhar/scaling-web-app/backend/logservice/loghelper"
 )
 
 var (
@@ -34,6 +38,12 @@ func processRequests() {
 			go processRequest(host, request)
 		case host := <-registerCh:
 			println("register: " + host)
+			go loghelper.WriteEntry(&entity.LogEntry{
+				Level:     entity.LogLevelInfo,
+				Timestamp: time.Now(),
+				Source:    "load balancer",
+				Message:   "Registering application server with address: " + host,
+			})
 			isFound := false
 			for _, h := range appservers {
 				if host == h {
@@ -46,6 +56,12 @@ func processRequests() {
 			}
 		case host := <-unregisterCh:
 			println("unregister: " + host)
+			go loghelper.WriteEntry(&entity.LogEntry{
+				Level:     entity.LogLevelInfo,
+				Timestamp: time.Now(),
+				Source:    "load balancer",
+				Message:   "Unregistering application server with address: " + host,
+			})
 			for i := len(appservers) - 1; i >= 0; i-- {
 				if appservers[i] == host {
 					appservers = append(appservers[:i], appservers[i+1:]...)
