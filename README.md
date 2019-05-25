@@ -16,12 +16,16 @@ A repository for learning how to scale a web application, concentrates over usin
 ### Building image for web backend
 - `docker build -f .docker/web.dockerfile -t scale/web .`
 
+### Building image for cache service
+- `docker build -f .docker/cacheservice.dockerfile -t scale/cacheservice .`
+
 ### Create containers
 - Containers:
     ```
     docker run --name dataservice --ip=172.18.0.10 --net=scalenet -p 4000:4000 --rm -it -d scale/dataservice
     docker run --name loadbalancer --ip=172.18.0.12 --net=scalenet -p 2000:2000 --rm -it -d scale/loadbalancer
-    docker run --net=scalenet --ip=172.18.0.2 -p3000:3000 --name webtest --rm -it scale/web --dataservice=https://172.18.0.10:4000 --loadbalancer=https://172.18.0.12:2001
+    docker run --name cacheservice --ip=172.18.0.13 --net=scalenet -p 5000:5000 --rm -it scale/cacheservice
+    docker run --net=scalenet --ip=172.18.0.2 -p3000:3000 --name webtest --rm -it scale/web --dataservice=https://172.18.0.10:4000 --loadbalancer=https://172.18.0.12:2001 --cachingservice=https://172.18.0.13:5000
     ```
 - Check that both the containers are up and running using the below-mentioned commands:
     ```

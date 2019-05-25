@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -13,7 +14,7 @@ var cacheServiceURL = flag.String("cachingservice", "https://172.18.0.13:5000", 
 func getFromCache(key string) (io.ReadCloser, bool) {
 	resp, err := http.Get(*cacheServiceURL + "/?key=" + key)
 	if err != nil || resp.StatusCode != http.StatusOK {
-		println("get fail")
+		fmt.Printf("Get failed with response code %v | ERROR: %v\n", resp.StatusCode, err)
 		return nil, false
 	}
 	return resp.Body, true
